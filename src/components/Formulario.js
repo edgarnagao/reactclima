@@ -1,16 +1,40 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 
-const Formulario = () => {
+const Formulario = ({busqueda,guardarBusqueda, guardarConsultar}) => {
 
+    const [error, guardarError] = useState(false);
 
+    const{ciudad, pais} = busqueda;
+
+    // funcioan que colocla los elementos en el stata
     const handleChange = e => {
-        //Cambiar el state
+        // Actualizar state
+        guardarBusqueda({
+            ...busqueda,
+            [e.target.name] : e.target.value
+        })
+    }
+
+    // Funcion para cambiar 
+    const handleSubmit = e => {
+        // Mandar la consulta del api
+        e.preventDefault();
+
+        // Valdiar
+        if(ciudad.trim()==='' || pais.trim() === ''){
+            guardarError(true);
+            return;
+        }
+
+        // Mandarlo 
+        guardarConsultar(true);
     }
     
     //Commit
     return(
-        <form>
+        <form onSubmit={handleSubmit}>
+            {error ? <p className="red darken-4">Todos los campos son obligatorios</p>: null}  
             <div className="input-field input col s12">
                 <input
                     type="text"
@@ -32,11 +56,16 @@ const Formulario = () => {
                     <option value="PE">Perú</option>
                 </select>
             </div>
+            
+            
             <div className="input-field col s12">
-                <input type="submit" className="waves-effect waves-light btn-large btn-block yellow accent-4" value="Buscar Clima">
-
-                </input>
-            </div>
+                <input 
+                    type="submit"
+                    value="Buscar Clima"
+                    className="waves-effect waves-light btn-large btn-block yellow accent-4"
+                />
+            </div> 
+            
         </form>
     );
 }
